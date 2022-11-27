@@ -3,6 +3,22 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 
 jobs:
+  precommit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+      - uses: pre-commit/action@v3.0.0
+      # - run: poetry install
+      # - name: Running pre-commit hooks on all files
+      #   run: poetry run pre-commit run --all-files
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -18,4 +34,7 @@ jobs:
           python-version: '3.9'
           cache: 'poetry'
       - run: poetry install
-      - run: poetry run pytest ${{ matrix.file }}
+      - name: Running pre-commit hooks on all files
+        run: poetry run pre-commit run --all-files
+      - name: Running pre-commit hooks on all files
+        run: poetry run pytest ${{ matrix.file }}
