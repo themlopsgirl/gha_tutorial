@@ -3,21 +3,12 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 
 jobs:
-  test_add:
+  test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          cache: 'poetry'
-      - run: poetry install
-      - run: poetry run pytest tests/test_add.py
+    strategy:
+      matrix:
+        file: ['tests/test_add.py', 'tests/test_capitalize.py']
 
-  test_capitalize:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
@@ -27,4 +18,4 @@ jobs:
           python-version: '3.9'
           cache: 'poetry'
       - run: poetry install
-      - run: poetry run pytest tests/test_capitalize.py
+      - run: poetry run pytest ${{ matrix.file }}
